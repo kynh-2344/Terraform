@@ -8,6 +8,53 @@ resource "aws_vpc" "custom_vpc" {
   }
 }
 
+data "aws_ami" "public_instance_data"{
+    most_recent = true
+    owners = ["amazon"]
+    filter {
+        name = "name"
+        values = ["amzn2-ami-kernel-*-ebs"]
+    }
+    filter {
+        name = "architecture"
+        values = ["x86_64"]
+    }
+    filter {
+        name = "virtualization-type"
+        values = ["hvm"]
+    }
+    filter {
+        name = "hypervisor"
+        values = ["xen"]
+    }
+    filter {
+        name = "image-type"
+        values = ["machine"]
+    }
+}
+
+resource "aws_instance" "public_instance" {
+  ami = data.aws_ami.public_instance_data.id
+  instance_type = "t2.micro"
+  network_interface {
+    device_index = 0
+    network_interface_id = aws_network_interface.public_nic.id
+  }
+  key_name = "aws-key"
+  tags = {
+      Name = "Public-EC2"
+  }
+  user_data = <<-EOF
+              #!/bin/sh
+              yum -y install httpd php telnet
+              chkconfig httpd on
+              cd /var/www/html
+              wget https://us-west-2-aws-training.s3.amazonaws.com/awsu-spl/spl03-working-elb/static/examplefiles-elb.zip
+              unzip examplefiles-elb.zip
+              /usr/sbin/httpd -DFOREGROUND
+              EOF
+}
+
 resource "aws_subnet" "public_subnet" {
   cidr_block = "10.0.1.0/24"
   availability_zone = "us-east-1a"
@@ -51,12 +98,6 @@ resource "aws_security_group" "custom_sg" {
       to_port = 80
       cidr_blocks = ["0.0.0.0/0"]
   }
-#   ingress {
-#       protocol = "tcp"
-#       from_port = 443
-#       to_port = 443
-#       cidr_blocks = ["0.0.0.0/0"]
-#   }
   ingress {
       protocol = "tcp"
       from_port = 22
@@ -154,25 +195,4 @@ resource "aws_network_interface" "public_nic" {
   ]
 }
 
-resource "aws_instance" "public_instance" {
-  ami = "ami-0c293f3f676ec4f90"
-  instance_type = "t2.micro"
-  network_interface {
-    device_index = 0
-    network_interface_id = aws_network_interface.public_nic.id
-  }
-  key_name = "aws-key"
-  tags = {
-      Name = "Public-EC2"
-  }
-  user_data = <<-EOF
-              #!/bin/sh
-              yum -y install httpd php telnet
-              chkconfig httpd on
-              cd /var/www/html
-              wget https://us-west-2-aws-training.s3.amazonaws.com/awsu-spl/spl03-working-elb/static/examplefiles-elb.zip
-              unzip examplefiles-elb.zip
-              /usr/sbin/httpd -DFOREGROUND
-              EOF
-}
 
