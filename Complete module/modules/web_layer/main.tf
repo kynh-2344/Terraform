@@ -77,7 +77,7 @@ resource "aws_alb" "lab_architect_alb_front" {
     tags = {
         Name = var.alb_name
     }
-    enable_deletion_protection = true
+    #enable_deletion_protection = true
 }
 
 resource "aws_lb_target_group" "lab_architect_alb_tgp_front" {
@@ -98,12 +98,26 @@ resource "aws_lb_target_group" "lab_architect_alb_tgp_front" {
     }
 }
 
-resource "aws_lb_target_group_attachment" "attach_target" {
-    target_group_arn    = aws_lb_target_group.lab_architect_alb_tgp_front.arn
-    count       = length([
+locals {
+    instance_id = [
         aws_instance.lab_architect_ec2_1.id,
         aws_instance.lab_architect_ec2_2.id
-    ])
-    target_id           = element([aws_instance.lab_architect_ec2_1.id,aws_instance.lab_architect_ec2_2.id], count.index )
+    ]
+}
+
+resource "aws_lb_target_group_attachment" "attach_target_1" {
+    target_group_arn    = aws_lb_target_group.lab_architect_alb_tgp_front.arn
+    count               = length(local.instance_id)
+    target_id           = element(local.instance_id, count.index )
     port                = 80
+}
+
+resource "aws_lb_listener" "lb_listener" {
+    load_balancer_arn   = aws_alb.lab_architect_alb_front.arn
+    port                = "80"
+    protocol            = "HTTP"
+    default_action {
+      type              = "forward"
+      target_group_arn = aws_lb_target_group.lab_architect_alb_tgp_front.arn
+    }
 }
