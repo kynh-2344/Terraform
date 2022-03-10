@@ -1,6 +1,9 @@
 # network_layer
 module "network_layer" {
-    source = "./modules/network_layer"
+    source          = "./modules/network_layer"
+    project         = var.project 
+    environment     = var.environment
+    vpc_cidr_block  = var.vpc_cidr_block
 }
 
 # route_layer
@@ -31,5 +34,8 @@ module "web_layer" {
     ]
     elb_sg_id           = module.security_layer.elb_sg_id
     instance_name       = var.instance_names
+    instance_type       = var.instance_type
     alb_name            = var.alb_name
+    min_scale_size      = var.min_scale_size
+    max_scale_size      = var.max_scale_size
 }

@@ -18,6 +18,11 @@ variable "instance_name" {
     description = "EC2 names"
 }
 
+variable "instance_type" {
+    type = string
+    description = "Instance Type"
+}
+
 variable "alb_name" {
     type = string
     description = "Application Load Balancer custom name"
@@ -27,3 +32,14 @@ variable "vpc_id" {
     type = string
     description = "VPC ID"
 }
+
+variable "min_scale_size" {
+    type = number
+    description = "Min EC2 numbers"
+}
+
+variable "max_scale_size" {
+    type = number
+    description = "Max EC2 numbers"
+}
+
