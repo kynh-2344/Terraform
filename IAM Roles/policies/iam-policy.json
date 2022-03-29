@@ -9,7 +9,7 @@
                 "s3:PutObject",
                 "s3:DeleteObject"
             ],
-            "Resource" : "*"
+            "Resource" : "${bucket_arn}"
         }
     ]
 }
