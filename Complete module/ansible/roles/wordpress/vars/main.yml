@@ -1,0 +1,3 @@
+url_wordpress_tarball: https://wordpress.org/latest.tar.gz
+wordpress_tarfile: "{{ url_wordpress_tarball | basename }}"
+url_wordpress_saltkey: https://api.wordpress.org/secret-key/1.1/salt/

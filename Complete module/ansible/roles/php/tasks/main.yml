@@ -1,0 +1,27 @@
+- name: Adding ondrej/php PPA
+  apt_repository:
+    repo: ppa:ondrej/php
+
+- name: Update Cache
+  apt:
+    update_cache: yes
+
+- name: Installing WordPress PHP Dependencies
+  apt: 
+    name: "{{ php_version ~ item }}"
+    state: present
+  loop: "{{ php_packages }}"
+  
+- name: Change PHP-FPM Upload Size
+  lineinfile:  
+    path: /etc/php/{{ php_version[-3:] }}/fpm/php.ini
+    regexp: "{{ item.replace }}"
+    line: "{{ item.with }}"
+    state: present
+  loop:
+    - { replace : "post_max_size =", with : "post_max_size = 100M" }
+    - { replace : "upload_max_filesize =", with : "upload_max_filesize = 100M" }
+    - { replace : "max_input_time =", with : "max_input_time = 300" }
+    - { replace : "max_execution_time =", with : "max_execution_time = 300" }
+  notify: Start PHP-FPM Service
+

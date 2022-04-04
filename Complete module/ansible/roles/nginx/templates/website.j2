@@ -1,0 +1,35 @@
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name localhost;
+    set         $base {{ efs_mount_path }};
+    root        $base;
+
+    # security
+    include     nginxconfig.io/security.conf;
+
+    # logging
+    access_log  /var/log/nginx/localhost.access.log;
+    error_log   /var/log/nginx/localhost.error.log warn;
+
+    # index.php
+    index       index.php;
+
+    # additional config
+    include     nginxconfig.io/general.conf;
+    include     nginxconfig.io/wordpress.conf;
+
+    # handle .php
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+        include      nginxconfig.io/php_fastcgi.conf;
+    }
+}
+
+# subdomains redirect
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name *.localhost;
+    return      301 http://localhost$request_uri;
+}

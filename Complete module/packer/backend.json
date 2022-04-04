@@ -1,0 +1,79 @@
+{
+    "builders" :[{
+        "type"                                      : "amazon-ebs",
+        "ami_name"                                  : "{{user `app_ami_name`}}",
+        "source_ami_filter" : {
+            "filters" : {
+                "virtualization-type"               : "hvm",
+                "name"                              : "{{user `app_ami_location`}}",
+                "image-type"                        : "machine",
+                "hypervisor"                        : "xen",
+                "block-device-mapping.volume-type"  : "gp2"
+            },
+            "owners"                                : ["{{user `ubuntu_owner_id`}}"],
+            "most_recent"                           : true
+        },
+        "associate_public_ip_address"               : true,
+        "sriov_support"                             : true,
+        "ena_support"                               : true,
+        "instance_type"                             : "{{user `ami_instance_type`}}",
+        "region"                                    : "{{user `region`}}",
+        "ssh_username"                              : "{{user `app_ssh_user`}}",
+        "ssh_interface"                             : "public_ip",
+        "ssh_timeout"                               : "5m",
+        "vpc_filter" : {
+            "filters" : {
+                "tag:Name"      : "wordpress-vpc-lab"
+            }
+        },
+        "subnet_filter" : {
+            "filters" : {
+                "tag:Name" : "*-private-1-*"
+            }
+        },
+        "security_group_filter" : {
+            "filters" : {
+                "tag:Name" : "*-Packer-sg-*"
+            }
+        },
+        "launch_block_device_mappings"  : {
+            "delete_on_termination"                 : "{{user `delete_termination`}}",
+            "device_name"                           : "{{user `ubuntu_root_block_name`}}",
+            "volume_size"                           : "{{user `block_size`}}",
+            "volume_type"                           : "{{user `block_type`}}",
+            "encrypted"                             : "{{user `encrypt`}}",
+            "iops"                                  : "{{user `iops_number`}}"
+        },
+        "tags" : {
+            "Name"                                  : "{{user `app_ami_name`}}",
+            "Packer"                                : true
+        }
+    }
+    ],
+    "provisioners" : [
+        {
+            "type"                                  : "shell",
+            "script"                                : "./scripts/install.sh"
+        },
+        {
+            "type"                                  : "ansible-local",
+            "playbook_file"                         : "../ansible/setup-app.yml",
+            "role_paths" : [
+                "../ansible/roles/base/",
+                "../ansible/roles/efs/",
+                "../ansible/roles/nginx",
+                "../ansible/roles/wordpress",
+                "../ansible/roles/php"
+            ],
+            "inventory_groups"                      : [
+                "app_role",
+                "ev_env"
+            ],
+            "group_vars"                            : "../ansible/group_vars/"
+        },
+        {
+            "type"                                  : "shell",
+            "script"                                : "./scripts/clean.sh"
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "timestamp"                 : "202203152033",
+    "region"                    : "us-east-1",
+    "ami_instance_type"         : "t2.micro",
+    "app_ssh_user"              : "ubuntu",
+    "bastion_ssh_user"          : "ec2-user",
+    "block_size"                : "40",
+    "block_type"                : "gp3",
+    "iops_number"               : "3000",
+    "app_ami_name"              : "app-ami-{{user `timestamp`}}-gp3",
+    "bastion_ami_name"          : "bastion-ami-{{user `timestamp`}}-gp3",
+    "ubuntu_owner_id"           : "099720109477",
+    "amazon_onwer_id"           : "amazon",
+    "ubuntu_root_block_name"    : "/dev/sda1",
+    "amazon_root_block_name"    : "/dev/xvda",
+    "app_ami_location"          : "ubuntu/images/hvm-ssd/ubuntu-bionic-*",
+    "bastion_ami_location"      : "amzn2-ami-*",
+    "delete_termination"        : "true",
+    "encrypt"                   : "false"
+}

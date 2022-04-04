@@ -1,0 +1,12 @@
+variable "private_subnets" {}
+variable "environment" {}
+variable "project" {}
+variable "node_class" {}
+variable "cluster_number" {}
+variable "cache_engine" {}
+variable "cache_version" {}
+variable "elasticache_paragroup" {}
+variable "vpc_id" {}
+variable "cache_family" {}
+variable "elasticache_sg" {}
+variable "replicas_per_node_group" {}

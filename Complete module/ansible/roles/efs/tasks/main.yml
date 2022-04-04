@@ -1,0 +1,12 @@
+- name: Installing NFS common
+  apt:
+    name: "{{ nfs_package }}"
+    state: present
+
+- name: Mount EFS 
+  mount:
+    name: "{{ efs_mount_path }}"
+    src: "{{ efs_dns_name }}:/"
+    fstype: nfs4
+    opts: nfsvers=4.1
+    state: mounted

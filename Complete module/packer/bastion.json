@@ -1,0 +1,40 @@
+{
+    "builders" :[{
+        "type"                                      : "amazon-ebs",
+        "ami_name"                                  : "{{user `bastion_ami_name`}}",
+        "source_ami_filter" : {
+            "filters" : {
+                "virtualization-type"               : "hvm",
+                "name"                              : "{{user `bastion_ami_location`}}",
+                "image-type"                        : "machine",
+                "hypervisor"                        : "xen",
+                "block-device-mapping.volume-type"  : "gp2"
+            },
+            "owners"                                : ["{{user `amazon_onwer_id`}}"],
+            "most_recent"                           : true
+        },
+        "instance_type"                             : "{{user `ami_instance_type`}}",
+        "region"                                    : "{{user `region`}}",
+        "ssh_username"                              : "{{user `bastion_ssh_user`}}",
+        "launch_block_device_mappings"  : {
+            "delete_on_termination"                 : "{{user `delete_termination`}}",
+            "device_name"                           : "{{user `amazon_root_block_name`}}",
+            "volume_size"                           : "{{user `block_size`}}",
+            "volume_type"                           : "{{user `block_type`}}",
+            "encrypted"                             : "{{user `encrypt`}}",
+            "iops"                                  : "{{user `iops_number`}}"
+        },
+        "tags" : {
+            "Name"                                  : "{{user `bastion_ami_name`}}",
+            "Packer"                                : true
+        }
+    }
+    ],
+    "provisioners" : [
+        {
+            "type"                                  : "file",
+            "source"                                : "./keypairs/aws-key.pem",
+            "destination"                           : "/home/{{user `bastion_ssh_user`}}/aws-key.pem"
+        }
+    ]
+}

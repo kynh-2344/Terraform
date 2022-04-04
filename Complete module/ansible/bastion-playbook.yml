@@ -1,0 +1,5 @@
+- hosts: bastion_role
+  become: yes
+  gather_facts: yes
+  roles:
+    - base

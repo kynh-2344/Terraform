@@ -1,0 +1,29 @@
+- name: Installing Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: "{{ chosen_domain }} Nginx Folders"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data 
+    group: www-data 
+    mode: "775"
+  loop: "{{ nginx_folder }}"
+
+- name: Main Nginx Config
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: "664"
+  loop: "{{ nginx_configs }}"
+
+- name: Remove The Defaut Website
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Start Nginx Service
+

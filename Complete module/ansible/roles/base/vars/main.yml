@@ -1,0 +1,61 @@
+base_apt_packages:
+  - tcl-dev
+  - gettext
+  - fail2ban
+  - openssl
+  - python3-pip
+  - chrony
+  - wget
+  - unzip
+  - telnet
+  - logrotate
+  - zlib1g-dev
+  - libssl-dev
+  - libreadline6-dev
+  - libncurses5-dev
+  - libxml2-dev
+  - libxslt1-dev
+  - libcurl4-openssl-dev
+  - libexpat1-dev
+  - libz-dev
+  - libssl-dev
+  - libffi-dev
+  - libyaml-dev
+  - libsqlite3-dev
+  - redis
+  - sqlite3
+  - software-properties-common
+  - build-essential
+  - apt-transport-https
+  - mysql-client
+  - curl
+  - vim
+  - git
+  - acl
+  - htop
+
+base_yum_packages:
+  - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  - tcl
+  - gettext
+  - fail2ban
+  - openssl
+  - python3-pip
+  - chrony
+  - wget
+  - unzip
+  - telnet
+  - logrotate
+  - mysql
+  - vim 
+  - redis
+  - curl
+  - acl
+  - git
+  - htop
+
+chrony_path: "{{ '/etc/chrony/chrony.conf' if ansible_facts['distribution'] == 'Ubuntu' else '/etc/chrony.conf' }}"
+service_name:
+  - "{{ 'chrony' if ansible_facts['distribution'] == 'Ubuntu' else 'chronyd' }}"
+  - fail2ban
+time_zone: America/Chicago

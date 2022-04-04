@@ -1,0 +1,10 @@
+# Database
+app_name: "app"
+deploy_user: "deploy"
+deploy_group: "{{ 'wheel' if ansible_facts['distribution'] == 'Amazon' else 'sudo' }}"
+sub_domain:
+- mydomain.na
+- mydomain.com
+chosen_domain:  "{{ sub_domain[0] }}"
+php_version: "php7.4"
+efs_mount_path: "/var/www/{{ chosen_domain }}"

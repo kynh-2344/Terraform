@@ -1,0 +1,9 @@
+- hosts: backend_role
+  become: yes
+  gather_facts: yes
+  roles:
+    - base
+    - nginx
+    - efs
+    - php
+    - wordpress

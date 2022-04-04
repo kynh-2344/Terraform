@@ -1,0 +1,50 @@
+- name: Create {{ deploy_user }} user 
+  user:
+    name: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    state: present
+    shell: /bin/bash
+    append: yes
+    create_home: yes
+
+- name: Allow passwordless {{ deploy_user }} 
+  lineinfile:
+    path: /etc/sudoers
+    line: "%{{ deploy_user }} ALL=(ALL:ALL) NOPASSWD: ALL"
+    state: present
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Installing base packages 
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop: "{{ base_apt_packages }}"
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+- name: Installing base packages 
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop: "{{ base_yum_packages }}"
+  when: ansible_facts['distribution'] == "Amazon" or ansible_facts['distribution'] == "CentOS"
+
+- name: Copying chrony template
+  template:
+    src: chrony.j2
+    dest: "{{ chrony_path }}"
+    owner: root
+    group: root
+    mode: "644"
+
+- name: Start services
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ service_name }}"
+
+- name: Set timezone to {{ time_zone }}
+  timezone:
+    name: "{{ time_zone }}"
