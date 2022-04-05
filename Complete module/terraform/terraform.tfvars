@@ -16,6 +16,11 @@ private_cidr_blocks             = [
     "10.0.4.0/24"
 ]
 
+iam_users = [
+    "s3_user",
+    "cloudwatch_user"
+]
+
 instance_number                 = 2
 instance_class                  = "t3.small"
 instance_type                   = "t2.micro"

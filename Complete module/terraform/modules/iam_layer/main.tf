@@ -29,3 +29,12 @@ resource "aws_iam_instance_profile" "instance_profile" {
     name                = "${var.project}-instance-profile-${var.environment}"
     role                = aws_iam_role.ec2_iam_role.name
 }
+
+resource "aws_iam_user" "iam_users" {
+    count               = length(var.iam_users)
+    name                = var.iam_users[count.index]
+    path                = "/"
+    tags = {
+        Name            = "Custom user"
+    }
+}

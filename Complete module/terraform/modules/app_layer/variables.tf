@@ -10,7 +10,6 @@ variable "private_subnets" {}
 
 # INSTANCE LAYER
 variable "frontend_lb_target_arn" {}
-variable "app_port" {}
 variable "max_scale_size" {}
 variable "instance_type" {}
 variable "app_cpu_target" {}

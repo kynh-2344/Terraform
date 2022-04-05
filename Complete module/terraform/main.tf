@@ -10,6 +10,7 @@ module "network_layer" {
     private_cidr_blocks     = var.private_cidr_blocks
     eip_number              = var.eip_number
     region                  = var.region
+    public_ip               = var.public_ip
 }
 
 # IAM
@@ -17,6 +18,7 @@ module "iam_layer" {
     source                  = "./modules/iam_layer"
     environment             = var.environment
     project                 = var.project 
+    iam_users               = var.iam_users
     bucket_arns             = module.storage_layer.bucket_arns
 }   
 
@@ -110,7 +112,6 @@ module "app_layer" {
     instance_type           = var.instance_type
     app_sg                  = module.security_layer.app_sg
     frontend_lb_target_arn  = module.front_layer.frontend_lb_target_arn
-    app_port                = var.app_port
     min_scale_size          = var.min_scale_size
     max_scale_size          = var.max_scale_size
     private_subnets         = module.network_layer.private_subnets

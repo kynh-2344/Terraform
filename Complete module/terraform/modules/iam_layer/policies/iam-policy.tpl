@@ -20,6 +20,27 @@
                 "s3:DeleteObject"
             ],
             "Resource" : ${jsonencode(split(",",sub_bucket_arns))}
+        },
+        {
+            "Effect" : "Allow",
+            "Action" : [
+                "cloudwatch:PutMetricData",
+                "ec2:DescribeVolumes",
+                "ec2:DescribeTags",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams",
+                "logs:DescribeLogGroups",
+                "logs:CreateLogStream",
+                "logs:CreateLogGroup"
+            ],
+            "Resource" : "*"
+        },
+        {
+            "Effect" : "Allow",
+            "Action" : [
+                "ssm:GetParameter"
+            ],
+            "Resource" : "arn:aws:ssm:*:*:parameter/AmazonCloudWatch-*"
         }
     ]
 }

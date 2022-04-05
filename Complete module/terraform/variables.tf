@@ -15,11 +15,6 @@ variable "vpc_cidr_block" {
     description = "CIDR Block of VPC"
 }
 
-variable "public_ip" {
-    type        = string
-    description = "Local Public IP"
-}
-
 variable "public_subnet_number" {
     type        = string
     description = "Name of public subnets"
@@ -33,6 +28,11 @@ variable "public_cidr_blocks" {
 variable "private_subnet_number" {
     type        = string
     description = "Name of private subnets"
+}
+
+variable "public_ip" {
+    type        = string
+    description = "Public IP"
 }
 
 variable "private_cidr_blocks" {
@@ -120,11 +120,6 @@ variable "backup_retention_period" {
     description = "Backup rentation perioud"
 }
 
-variable "app_port" {
-    type        = number
-    description = "APP port"
-}
-
 variable "bastion_instance_number" {
     type        = number
     description = "A number of bastion instances" 
@@ -183,4 +178,9 @@ variable "efs_performance_mode" {
 variable "efs_throughput_mode" {
     type = string
     description = "EFS Throughput Mode"   
+}
+
+variable "iam_users" {
+    type        = list 
+    description = "List of IAM Users"
 }

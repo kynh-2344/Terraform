@@ -98,4 +98,3 @@ EOF
 output "efs_mount_target_dns_name" {
     value = module.efs_layer.efs_mount_target_dns_name
 }
-
